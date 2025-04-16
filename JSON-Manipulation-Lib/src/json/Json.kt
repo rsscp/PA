@@ -1,5 +1,5 @@
 package json
 
 abstract class Json() {
-    abstract fun serialize(): String
+    abstract override fun toString(): String
 }

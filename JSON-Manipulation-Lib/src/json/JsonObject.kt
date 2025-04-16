@@ -8,7 +8,7 @@ class JsonObject(
     override fun filter(filter: () -> Boolean){
 
     }
-    override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value.serialize()}"} + "}"
+    override fun toString(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value}"} + "}"
 
     fun getProperty(key: String):Json? = properties[key]
 }

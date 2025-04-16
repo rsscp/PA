@@ -13,4 +13,6 @@ class JsonArray(
 
     }
     override fun toString(): String = "[" + properties.joinToString { it.toString() } + "]"
+
+    fun getProperty(key: Int):Json? = properties[key]
 }

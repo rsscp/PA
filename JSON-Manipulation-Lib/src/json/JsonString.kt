@@ -5,5 +5,5 @@ class JsonString(val value: String): Json() {
 
     }
 
-    override fun serialize(): String = "\"${value}\""
+    override fun toString(): String = "\"${value}\""
 }

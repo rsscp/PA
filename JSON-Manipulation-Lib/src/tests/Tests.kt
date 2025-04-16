@@ -18,12 +18,18 @@ class Tests {
             )
         )
         assertEquals("Alice", (json.getProperty("name") as JsonString).value)
-        assertEquals("age", json.getProperty("age"))
+        assertEquals(30.0, (json.getProperty("age") as JsonNumber).value)
+        assertEquals(true, (json.getProperty("active") as JsonBoolean).value)
+        val tags = json.getProperty("tags") as JsonArray
+        assertEquals("dev", (tags.getProperty(0) as JsonString).value)
+        assertEquals("user", (tags.getProperty(1) as JsonString).value)
+        assertEquals("Alice", (json.getProperty("name") as JsonString).value)
+        assertTrue(json.getProperty("note") is JsonNull)
     }
 
 
     @Test
-    fun serialieTest() {
+    fun serializeTest() {
         val json = JsonObject(
             mutableMapOf(
                 "name" to JsonString("Alice"),
