@@ -6,5 +6,5 @@ import json.primitives.JsonNull
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     val o = JsonNull()
-    println(o.getValuee())
+    println(o.getPrimitiveValue())
 }

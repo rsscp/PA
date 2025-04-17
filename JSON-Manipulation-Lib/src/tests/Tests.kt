@@ -2,7 +2,8 @@ package tests
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*;
-import json.*
+import json.containers.*
+import json.primitives.*
 
 class Tests {
 
@@ -17,12 +18,12 @@ class Tests {
                 "note" to JsonNull()
             )
         )
-        assertEquals("Alice", (json.getProperty("name") as JsonString).value)
-        assertEquals(30.0, (json.getProperty("age") as JsonNumber).value)
-        assertEquals(true, (json.getProperty("active") as JsonBoolean).value)
+        assertEquals("Alice", (json.getProperty("name") as JsonString).getPrimitiveValue())
+        assertEquals(30.0, (json.getProperty("age") as JsonNumber).getPrimitiveValue())
+        assertEquals(true, (json.getProperty("active") as JsonBoolean).getPrimitiveValue())
         val tags = json.getProperty("tags") as JsonArray
-        assertEquals("dev", (tags.getProperty(0) as JsonString).value)
-        assertEquals("user", (tags.getProperty(1) as JsonString).value)
+        assertEquals("dev", (tags.getProperty(0) as JsonString).getPrimitiveValue())
+        assertEquals("user", (tags.getProperty(1) as JsonString).getPrimitiveValue())
         assertTrue(json.getProperty("note") is JsonNull)
     }
 
@@ -52,15 +53,15 @@ class Tests {
                 "note" to JsonNull()
             )
         )
-        val filteredObject = json.filter{k, _ -> k == "tags"}
+        val filteredObject = json.filter{kv -> kv.first == "tags"}
         val tagsObject = filteredObject.getProperty("tags") as JsonArray
-        assertEquals(10, (tagsObject.getProperty(0) as JsonNumber).value)
-        assertEquals("dev", (tagsObject.getProperty(1) as JsonString).value)
-        assertEquals("user", (tagsObject.getProperty(2) as JsonString).value)
+        assertEquals(10, (tagsObject.getProperty(0) as JsonNumber).getPrimitiveValue())
+        assertEquals("dev", (tagsObject.getProperty(1) as JsonString).getPrimitiveValue())
+        assertEquals("user", (tagsObject.getProperty(2) as JsonString).getPrimitiveValue())
 
         val filteredArray = tagsObject.filter{ it is JsonString }
-        assertEquals("dev", (filteredArray.getProperty(0) as JsonString).value)
-        assertEquals("user", (filteredArray.getProperty(1) as JsonString).value)
+        assertEquals("dev", (filteredArray.getProperty(0) as JsonString).getPrimitiveValue())
+        assertEquals("user", (filteredArray.getProperty(1) as JsonString).getPrimitiveValue())
 
     }
 }

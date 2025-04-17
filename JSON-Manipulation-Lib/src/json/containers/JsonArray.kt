@@ -3,14 +3,17 @@ package json.containers
 import json.JsonElement
 
 class JsonArray(
-    val elements: MutableList<JsonContainer> = mutableListOf()
-): JsonContainer() {
+    val elements: MutableList<JsonElement> = mutableListOf()
+): JsonContainer<JsonElement>() {
 
     fun map(map: () -> Unit) {
         //TODO
     }
 
-    override fun filter(filter: () -> Boolean) = listOf<JsonElement>()
+    override fun filter(filter: (JsonElement) -> Boolean):JsonArray{
+        val newArray = elements.filter(filter).toMutableList()
+        return JsonArray(newArray)
+    }
 
     override fun serialize(): String = "[" + elements.joinToString { it.toString() } + "]"
 
