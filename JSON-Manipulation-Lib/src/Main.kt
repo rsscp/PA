@@ -1,13 +1,10 @@
-import json.JsonObject
-import json.Json
-import json.JsonArray
-import json.interfaces.Filterable
-import kotlin.reflect.KClass
+import json.containers.JsonObject
+import json.containers.JsonContainer
+import json.primitives.JsonNull
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
-    val j: Json = JsonObject()
-    val list: MutableList<Json> = mutableListOf()
-    list.add(j)
+    val o = JsonNull()
+    println(o.getValuee())
 }
