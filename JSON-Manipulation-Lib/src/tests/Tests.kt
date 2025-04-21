@@ -82,5 +82,8 @@ class Tests {
             } else it
         }
 
+        assertEquals(11.0, (mapped.getProperty(0) as JsonNumber).getPrimitiveValue())
+        assertEquals(1.5, (mapped.getProperty(1) as JsonNumber).getPrimitiveValue())
+        assertEquals("user", (mapped.getProperty(2) as JsonString).getPrimitiveValue())
     }
 }
