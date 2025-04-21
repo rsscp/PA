@@ -4,17 +4,76 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*;
 import json.containers.*
 import json.primitives.*
+import json.representations.JsonProperty
 
 class Tests {
+
+    @Test
+    fun primitivesTest() {
+        val jsonBoolean = JsonBoolean(true)
+        val jsonNumber = JsonNumber(256)
+        val jsonString = JsonString("test")
+        val jsonNull = JsonNull()
+
+        assertEquals(jsonBoolean.getPrimitiveValue(), true)
+        assertEquals(jsonNumber.getPrimitiveValue(), 256)
+        assertEquals(jsonString.getPrimitiveValue(), "test")
+        assertEquals(jsonNull.getPrimitiveValue(), null)
+    }
+
+    @Test
+    fun jsonArrayTest() {
+        val jsonArray = JsonArray(
+            JsonBoolean(true),
+            JsonNumber(256),
+            JsonString("test"),
+            JsonNull()
+        )
+
+        assertEquals(jsonArray[0]::class. in , true)
+        assertEquals(jsonArray[1], 256)
+        assertEquals(jsonArray[2], "test")
+        assertEquals(jsonArray[3], null)
+
+        assertEquals(jsonArray[0].getPrimitiveValue(), true)
+        assertEquals(jsonArray[1].getPrimitiveValue(), 256)
+        assertEquals(jsonArray[2].getPrimitiveValue(), "test")
+        assertEquals(jsonArray[3].getPrimitiveValue(), null)
+    }
+
+    @Test
+    fun jsonObjectTest() {
+        val jsonObject = JsonObject(
+            "boolean" to JsonBoolean(true),
+            "number" to JsonNumber(256),
+            "string" to JsonString("test"),
+            "null" to JsonNull()
+        )
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Test
     fun contentTest() {
         val json = JsonObject(
             mutableMapOf(
                 "name" to JsonString("Alice"),
-                "age" to JsonNumber(30.0),
+                "age" to JsonNumber(30),
                 "active" to JsonBoolean(true),
-                "tags" to JsonArray(mutableListOf(JsonString("dev"), JsonString("user"))),
+                "tags" to JsonArray(mutableListOf(
+                    JsonString("dev"),
+                    JsonString("user")
+                )),
                 "note" to JsonNull()
             )
         )
@@ -53,7 +112,7 @@ class Tests {
                 "note" to JsonNull()
             )
         )
-        val filteredObject = json.filter{kv -> kv.first == "tags"}
+        val filteredObject = json.filter{ property -> property.getKey() == "tags" }
         val tagsObject = filteredObject.getProperty("tags") as JsonArray
         assertEquals(10, (tagsObject.getProperty(0) as JsonNumber).getPrimitiveValue())
         assertEquals("dev", (tagsObject.getProperty(1) as JsonString).getPrimitiveValue())
