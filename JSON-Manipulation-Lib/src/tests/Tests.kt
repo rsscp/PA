@@ -1,5 +1,6 @@
 package tests
 
+import json.JsonElement
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*;
 import json.containers.*
@@ -62,6 +63,24 @@ class Tests {
         val filteredArray = tagsObject.filter{ it is JsonString }
         assertEquals("dev", (filteredArray.getProperty(0) as JsonString).getPrimitiveValue())
         assertEquals("user", (filteredArray.getProperty(1) as JsonString).getPrimitiveValue())
+
+    }
+
+    @Test
+    fun mappingTest() {
+        val json = JsonArray(
+            mutableListOf(
+                JsonNumber(10),
+                JsonNumber(0.5),
+                JsonString("user")
+            )
+        )
+
+        val mapped = json.map{
+            if(it is JsonNumber){
+                JsonNumber(it.getPrimitiveValue().toDouble() + 1)
+            } else it
+        }
 
     }
 }

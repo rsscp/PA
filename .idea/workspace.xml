@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="70e89887-f2df-4b87-9898-5a01c38f7d22" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/Json.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/Json.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonArray.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonArray.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonObject.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonObject.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/interfaces/Filterable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/interfaces/Filterable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/containers/JsonArray.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/containers/JsonArray.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/primitives/JsonNumber.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/primitives/JsonNumber.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/tests/Tests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/tests/Tests.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,21 +35,6 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/joaow/OneDrive/Documentos/GitHub/PA/JSON-Manipulation-Lib&quot;
   }
 }</component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="PA" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="PA" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
