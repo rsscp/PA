@@ -15,7 +15,7 @@ class JsonObject(
         }
     }
 
-    inline operator fun <reified JsonType>get(key: String): JsonType? {
+    inline operator fun <reified JsonType> get(key: String): JsonType? {
         require(key != "")
 
         val element = properties[key] ?: return null
