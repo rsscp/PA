@@ -40,7 +40,7 @@ class JsonArray(
     fun size(): Int = elements.size
 
     /**
-     * Gets object property using [index]
+     * Gets array element using [index]
      *
      * @param index Index for the element to get from [elements]
      * @return the filtered JsonArray
