@@ -36,6 +36,13 @@ class JsonArray(
             return null
     }
 
+    /**
+     * Sets array element at [index] to [value]
+     *
+     * @param index of the element to modify
+     * @param value New value for the element to modify
+     * @return the filtered JsonArray
+     */
     operator fun set(index: Int, value: JsonElement) {
         elements[index] = value
     }

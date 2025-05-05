@@ -30,6 +30,13 @@ class JsonObject(
             return null
     }
 
+    /**
+     * Sets object property identified by [key] to [value]
+     *
+     * @param key Key identifying the property to modify
+     * @param value New value for the property to modify
+     * @return the filtered JsonArray
+     */
     operator fun set(key: String, value: JsonElement) {
         properties[key] = value
     }
