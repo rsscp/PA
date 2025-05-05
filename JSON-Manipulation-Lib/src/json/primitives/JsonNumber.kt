@@ -1,6 +1,10 @@
 package json.primitives
 
-class JsonNumber(value: Number): JsonPrimitive<Number>(value) {
+import json.JsonElement
+
+data class JsonNumber(
+    val value: Number
+): JsonElement() {
 
     fun toInt(): Int = value.toInt()
     fun toDouble(): Double = value.toDouble()

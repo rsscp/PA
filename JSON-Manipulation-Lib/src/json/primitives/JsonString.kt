@@ -1,6 +1,10 @@
 package json.primitives
 
-class JsonString(value: String): JsonPrimitive<String>(value) {
+import json.JsonElement
+
+data class JsonString(
+    val value: String
+): JsonElement() {
 
     override fun serialize(): String = "\"${value}\""
 }

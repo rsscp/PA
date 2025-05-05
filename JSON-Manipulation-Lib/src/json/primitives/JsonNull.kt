@@ -1,8 +1,10 @@
 package json.primitives
 
-class JsonNull: JsonPrimitive<Unit?>(null) {
+import json.JsonElement
 
-    override fun getPrimitiveValue(): Unit? = null
+class JsonNull(): JsonElement() {
+
+    val value: Unit? = null
 
     override fun serialize(): String = "null"
 }
