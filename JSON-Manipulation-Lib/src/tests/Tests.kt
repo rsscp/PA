@@ -123,13 +123,13 @@ class Tests {
 
         val mappedArray = json.map {
             if(it is JsonNumber){
-                JsonNumber(it.getPrimitiveValue().toDouble() + 1)
+                JsonNumber(it.value.toDouble() + 1)
             } else it
         }
 
-        val number1: JsonNumber = mappedArray[0]
-        val number2: JsonNumber = mappedArray[1]
-        val string: JsonString = mappedArray[2]
+        val number1: JsonNumber? = mappedArray[0]
+        val number2: JsonNumber? = mappedArray[1]
+        val string: JsonString? = mappedArray[2]
 
         assertEquals(11.0, number1?.value)
         assertEquals(1.5, number2?.value)
