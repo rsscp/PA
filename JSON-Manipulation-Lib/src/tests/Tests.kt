@@ -89,7 +89,10 @@ class Tests {
         )
 
         val filteredObject = json.filter{ property -> property.getKey() == "tags" }
-        val tags = filteredObject.getProperty("tags") as JsonArray
+        val tagsNullable: JsonArray? = filteredObject["tags"]
+
+        assertNotNull(tagsNullable)
+        val tags: JsonArray = tagsNullable!!
 
         assertEquals(tags.size(), 3)
 

@@ -7,12 +7,16 @@ class JsonObject(
     vararg propertiesArray: Pair<String, JsonElement>
 ): JsonContainer<JsonProperty>() {
 
-    val properties: MutableMap<String, JsonElement> = mutableMapOf()        // TODO tornar privado
+    val properties: MutableMap<String, JsonElement> = mutableMapOf()
 
     init {
         for (property in propertiesArray) {
             properties.put(property.first, property.second)
         }
+    }
+
+    private constructor(propertiesList: List<JsonProperty>): this() {
+        propertiesList.forEach { properties.put(it.getKey(), it.getPropertyValue()) }
     }
 
     inline operator fun <reified JsonType> get(key: String): JsonType? {
@@ -24,6 +28,10 @@ class JsonObject(
             return element as JsonType
         else
             return null
+    }
+
+    operator fun set(key: String, value: JsonElement) {
+        properties[key] = value
     }
 
     override fun filter(check: (property: JsonProperty) -> Boolean): JsonObject {
@@ -41,6 +49,4 @@ class JsonObject(
     }
 
     override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value}"} + "}"
-
-    fun getProperty(key: String): JsonElement? = properties[key]
 }

@@ -6,7 +6,7 @@ class JsonArray(
     vararg elementsArray: JsonElement,
 ): JsonContainer<JsonElement>() {
 
-    val elements: MutableList<JsonElement> = mutableListOf()        //TODO tornar privado
+    val elements: MutableList<JsonElement> = mutableListOf()
 
     init {
         for (element in elementsArray) {
@@ -25,7 +25,7 @@ class JsonArray(
 
     fun size(): Int = elements.size
 
-    inline operator fun <reified JsonType> get(index: Int): JsonType? {
+    inline operator fun <reified JsonType> get(index: Int): JsonType? {     //TODO Exception quando element não é JsonElement
         require(index < size() || index >= 0)
 
         val element = elements[index]
@@ -34,6 +34,10 @@ class JsonArray(
             return element as JsonType
         else
             return null
+    }
+
+    operator fun set(index: Int, value: JsonElement) {
+        elements[index] = value
     }
 
     override fun filter(check: (JsonElement) -> Boolean): JsonArray {
