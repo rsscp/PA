@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70e89887-f2df-4b87-9898-5a01c38f7d22" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/Json.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/Json.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonArray.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonArray.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonObject.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/JsonObject.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/interfaces/Filterable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/JSON-Manipulation-Lib/src/json/interfaces/Filterable.kt" afterDir="false" />
-    </list>
+    <list default="true" id="70e89887-f2df-4b87-9898-5a01c38f7d22" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,19 +24,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/joaow/OneDrive/Documentos/GitHub/PA/JSON-Manipulation-Lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "visitor-implementation",
+    "last_opened_file_path": "C:/Users/joaow/OneDrive/Documentos/GitHub/PA/JSON-Manipulation-Lib"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="PA" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <module name="PA" />
       <option name="filePath" />

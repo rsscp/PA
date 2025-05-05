@@ -1,6 +1,8 @@
 package json
 
 abstract class JsonElement {
-    abstract fun accept(visitor: (JsonElement) -> Unit): Unit
+
+    open fun accept(visitor: (JsonElement) -> Unit): Unit = visitor(this)
+
     abstract fun serialize(): String
 }

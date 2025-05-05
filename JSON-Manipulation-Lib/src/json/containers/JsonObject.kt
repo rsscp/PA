@@ -5,9 +5,9 @@ import json.representations.JsonProperty
 
 class JsonObject(
     vararg propertiesArray: Pair<String, JsonElement>
-): JsonElement(), Filterable<JsonObject, JsonProperty> {
+): JsonContainer<JsonProperty>() {
 
-    private val properties: MutableMap<String, JsonElement> = mutableMapOf()
+    val properties: MutableMap<String, JsonElement> = mutableMapOf()        // TODO tornar privado
 
     init {
         for (property in propertiesArray) {
@@ -15,14 +15,29 @@ class JsonObject(
         }
     }
 
-    override fun filter(filter: (property: JsonProperty) -> Boolean): JsonObject {
-        val newObject = properties.filter{ (k, v) -> filter(JsonProperty(k,v)) }.toMutableMap()
-        return JsonObject(newObject)
+    inline operator fun <reified JsonType>get(key: String): JsonType? {
+        require(key != "")
+
+        val element = properties[key] ?: return null
+
+        if (element is JsonType)
+            return element as JsonType
+        else
+            return null
+    }
+
+    override fun filter(check: (property: JsonProperty) -> Boolean): JsonObject {
+        val filtered = JsonObject()
+        properties.forEach {
+            if (check(JsonProperty(it.key, it.value)))
+                filtered.properties.put(it.key, it.value)
+        }
+        return filtered
     }
 
     override fun accept(visitor: (JsonElement) -> Unit): Unit {
-        visitor(this)
-        properties.forEach { (k,v) -> JsonProperty(k,v).accept(visitor) }
+        super.accept(visitor)
+        properties.forEach { JsonProperty(it.key, it.value).accept(visitor) }
     }
 
     override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value}"} + "}"

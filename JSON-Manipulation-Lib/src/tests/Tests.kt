@@ -1,5 +1,6 @@
 package tests
 
+import json.JsonElement
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*;
 import json.containers.*
@@ -15,10 +16,10 @@ class Tests {
         val jsonString = JsonString("test")
         val jsonNull = JsonNull()
 
-        assertEquals(jsonBoolean.getPrimitiveValue(), true)
-        assertEquals(jsonNumber.getPrimitiveValue(), 256)
-        assertEquals(jsonString.getPrimitiveValue(), "test")
-        assertEquals(jsonNull.getPrimitiveValue(), null)
+        assertEquals(jsonBoolean.value, true)
+        assertEquals(jsonNumber.value, 256)
+        assertEquals(jsonString.value, "test")
+        assertEquals(jsonNull.value, null)
     }
 
     @Test
@@ -30,15 +31,17 @@ class Tests {
             JsonNull()
         )
 
-        assertEquals(jsonArray[0]::class. in , true)
-        assertEquals(jsonArray[1], 256)
-        assertEquals(jsonArray[2], "test")
-        assertEquals(jsonArray[3], null)
+        assertEquals(jsonArray.size(), 4)
 
-        assertEquals(jsonArray[0].getPrimitiveValue(), true)
-        assertEquals(jsonArray[1].getPrimitiveValue(), 256)
-        assertEquals(jsonArray[2].getPrimitiveValue(), "test")
-        assertEquals(jsonArray[3].getPrimitiveValue(), null)
+        val bool: JsonBoolean? = jsonArray[0]
+        val number: JsonNumber? = jsonArray[1]
+        val string: JsonString? = jsonArray[2]
+        val nulll: JsonNull? = jsonArray[3]
+
+        assertEquals(bool?.value, true)
+        assertEquals(number?.value, 256)
+        assertEquals(string?.value, "test")
+        assertEquals(nulll?.value, null)
     }
 
     @Test
@@ -49,6 +52,65 @@ class Tests {
             "string" to JsonString("test"),
             "null" to JsonNull()
         )
+
+        val bool: JsonBoolean? = jsonObject["boolean"]
+        val number: JsonNumber? = jsonObject["number"]
+        val string: JsonString? = jsonObject["string"]
+        val nulll: JsonNull? = jsonObject["null"]
+
+        assertEquals(bool?.value, true)
+        assertEquals(number?.value, 256)
+        assertEquals(string?.value, "test")
+        assertEquals(nulll?.value, null)
+    }
+
+    @Test
+    fun jsonArrayMapTest() {
+        val jsonArray = JsonArray(
+            JsonBoolean(true),
+            JsonNumber(256),
+            JsonString("test"),
+            JsonNull()
+        )
+    }
+
+    @Test
+    fun filterTest() {
+        val json = JsonObject(
+            "name" to JsonString("Alice"),
+            "age" to JsonNumber(30.0),
+            "active" to JsonBoolean(true),
+            "tags" to JsonArray(
+                JsonNumber(10),
+                JsonString("dev"),
+                JsonString("user")
+            ),
+            "note" to JsonNull()
+        )
+
+        val filteredObject = json.filter{ property -> property.getKey() == "tags" }
+        val tags = filteredObject.getProperty("tags") as JsonArray
+
+        assertEquals(tags.size(), 3)
+
+        val number: JsonNumber? = tags[0]
+        val dev1: JsonString? = tags[1]
+        val user1: JsonString? = tags[2]
+
+        assertEquals(10, number?.value)
+        assertEquals("dev", dev1?.value)
+        assertEquals("user", user1?.value)
+
+        val filteredArray = tags.filter{ it is JsonString }
+
+        assertEquals(filteredArray.size(), 2)
+
+        val dev2: JsonString? = filteredArray[0]
+        val user2: JsonString? = filteredArray[1]
+
+        assertEquals("dev", dev2?.value)
+        assertEquals("user", user2?.value)
+
     }
 
 
@@ -58,9 +120,7 @@ class Tests {
 
 
 
-
-
-
+/*
 
 
     @Test
@@ -123,4 +183,5 @@ class Tests {
         assertEquals("user", (filteredArray.getProperty(1) as JsonString).getPrimitiveValue())
 
     }
+    */
 }
