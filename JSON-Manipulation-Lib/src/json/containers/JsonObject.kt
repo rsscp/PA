@@ -3,6 +3,12 @@ package json.containers
 import json.JsonElement
 import json.representations.JsonProperty
 
+/**
+ * A Json containing a List of JsonProperty
+ *
+ * @property propertiesArray the list of Pair<String, JsonElement>
+ * @constructor Creates a List containing the provided elements
+ */
 class JsonObject(
     vararg propertiesArray: Pair<String, JsonElement>
 ): JsonContainer<JsonProperty>() {
@@ -26,6 +32,11 @@ class JsonObject(
             return null
     }
 
+    /**
+     * Applies a filter to the Map
+     *
+     * @return the filtered JsonObject
+     */
     override fun filter(check: (property: JsonProperty) -> Boolean): JsonObject {
         val filtered = JsonObject()
         properties.forEach {
@@ -35,12 +46,26 @@ class JsonObject(
         return filtered
     }
 
+    /**
+     * Iterates the map recursively applying [visitor]
+     *
+     */
     override fun accept(visitor: (JsonElement) -> Unit): Unit {
         super.accept(visitor)
         properties.forEach { JsonProperty(it.key, it.value).accept(visitor) }
     }
 
+    /**
+     * Serializes the Map into a Json compatible string
+     *
+     * @return the serialized Map
+     */
     override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value}"} + "}"
 
+    /**
+     * Getter for [properties]
+     *
+     * @return the property at the given [key]
+     */
     fun getProperty(key: String): JsonElement? = properties[key]
 }
