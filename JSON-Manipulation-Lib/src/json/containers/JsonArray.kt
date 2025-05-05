@@ -39,6 +39,12 @@ class JsonArray(
      */
     fun size(): Int = elements.size
 
+    /**
+     * Gets object property using [index]
+     *
+     * @param index Index for the element to get from [elements]
+     * @return the filtered JsonArray
+     */
     inline operator fun <reified JsonType> get(index: Int): JsonType? {
         require(index < size() || index >= 0)
 

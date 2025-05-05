@@ -21,6 +21,12 @@ class JsonObject(
         }
     }
 
+    /**
+     * Gets object property using [key]
+     *
+     * @param key Key identifying the property to get from [properties]
+     * @return the filtered JsonObject
+     */
     inline operator fun <reified JsonType> get(key: String): JsonType? {
         require(key != "")
 
