@@ -81,6 +81,6 @@ class JsonObject(
      *
      * @return the serialized Map
      */
-    override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "${key}: ${value}"} + "}"
+    override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "\"${key}\": ${value}"} + "}"
 
 }

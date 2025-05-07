@@ -1,11 +1,14 @@
 package tests
 
-import json.JsonElement
+import json.containers.JsonArray
+import json.containers.JsonObject
+import json.primitives.JsonBoolean
+import json.primitives.JsonNull
+import json.primitives.JsonNumber
+import json.primitives.JsonString
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*;
-import json.containers.*
-import json.primitives.*
-import json.representations.JsonProperty
 
 class Tests {
 
@@ -182,7 +185,7 @@ class Tests {
                 "note" to JsonNull()
             )
         )
-        assertEquals("{name: \"Alice\", age: 30.0, active: true, tags: [\"dev\", \"user\"], note: null}", json.toString())
+        assertEquals("{\"name\": \"Alice\", \"age\": 30.0, \"active\": true, \"tags\": [\"dev\", \"user\"], \"note\": null}", json.toString())
     }
 
     @Test
