@@ -92,5 +92,5 @@ class JsonArray(
      *
      * @return the serialized list
      */
-    override fun serialize(): String = "[" + elements.joinToString { it.toString() } + "]"
+    override fun serialize(): String = "[" + elements.joinToString { it.serialize() } + "]"
 }
