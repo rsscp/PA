@@ -194,15 +194,6 @@ class Tests {
             "note" to JsonNull()
         )
         assertEquals("{\"name\": \"Alice\", \"age\": 30.0, \"active\": true, \"tags\": [\"dev\", \"user\"], \"note\": null}", json.toString())
-
-        val j = json.copy(mutableMapOf("name" to JsonString("Alice"),
-            "age" to JsonNumber(30.0),
-            "active" to JsonBoolean(true),
-            "tags" to jsonArrayOf(
-                JsonString("dev"),
-                JsonString("user")
-            ),
-            "note" to JsonNull()))
     }
 
 
