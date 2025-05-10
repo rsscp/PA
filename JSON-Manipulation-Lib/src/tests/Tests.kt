@@ -1,11 +1,14 @@
 package tests
 
+import json.containers.JsonArray.Constructor.jsonArrayOf
 import json.containers.JsonArray
+import json.containers.JsonObject.Constructor.jsonObjectOf
 import json.containers.JsonObject
 import json.primitives.JsonBoolean
 import json.primitives.JsonNull
 import json.primitives.JsonNumber
 import json.primitives.JsonString
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -27,7 +30,7 @@ class Tests {
 
     @Test
     fun jsonArrayTest() {
-        val jsonArray = JsonArray(
+        val jsonArray = jsonArrayOf(
             JsonBoolean(true),
             JsonNumber(256),
             JsonString("test"),
@@ -36,54 +39,95 @@ class Tests {
 
         assertEquals(jsonArray.size(), 4)
 
-        val bool: JsonBoolean? = jsonArray[0]
-        val number: JsonNumber? = jsonArray[1]
-        val string: JsonString? = jsonArray[2]
-        val nulll: JsonNull? = jsonArray[3]
+        val bool: JsonBoolean = jsonArray[0] as JsonBoolean
+        val number: JsonNumber = jsonArray[1] as JsonNumber
+        val string: JsonString = jsonArray[2] as JsonString
+        val nulll: JsonNull = jsonArray[3] as JsonNull
 
-        assertEquals(bool?.value, true)
-        assertEquals(number?.value, 256)
-        assertEquals(string?.value, "test")
-        assertEquals(nulll?.value, null)
+        assertEquals(bool.value, true)
+        assertEquals(number.value, 256)
+        assertEquals(string.value, "test")
+        assertEquals(nulll.value, null)
     }
 
     @Test
     fun jsonObjectTest() {
-        val jsonObject = JsonObject(
+        val jsonObject = jsonObjectOf(
             "boolean" to JsonBoolean(true),
             "number" to JsonNumber(256),
             "string" to JsonString("test"),
             "null" to JsonNull()
         )
 
-        val bool: JsonBoolean? = jsonObject["boolean"]
-        val number: JsonNumber? = jsonObject["number"]
-        val string: JsonString? = jsonObject["string"]
-        val nulll: JsonNull? = jsonObject["null"]
+        val bool: JsonBoolean = jsonObject["boolean"] as JsonBoolean
+        val number: JsonNumber = jsonObject["number"] as JsonNumber
+        val string: JsonString = jsonObject["string"] as JsonString
+        val nulll: JsonNull = jsonObject["null"] as JsonNull
 
-        assertEquals(bool?.value, true)
-        assertEquals(number?.value, 256)
-        assertEquals(string?.value, "test")
-        assertEquals(nulll?.value, null)
+        assertEquals(bool.value, true)
+        assertEquals(number.value, 256)
+        assertEquals(string.value, "test")
+        assertEquals(nulll.value, null)
     }
 
     @Test
     fun jsonArrayMapTest() {
-        val jsonArray = JsonArray(
-            JsonBoolean(true),
-            JsonNumber(256),
-            JsonString("test"),
-            JsonNull()
+        val json = jsonArrayOf(
+            JsonNumber(10),
+            JsonNumber(0.5),
+            JsonString("user")
         )
+
+        val mapped = json.map {
+            if (it is JsonNumber)
+                JsonNumber(it.value.toDouble() + 1)
+            else
+                it
+        }
+
+        val number1: JsonNumber = mapped[0] as JsonNumber
+        val number2: JsonNumber = mapped[1] as JsonNumber
+        val string: JsonString = mapped[2] as JsonString
+
+        assertEquals(11.0, number1.value)
+        assertEquals(1.5, number2.value)
+        assertEquals("user", string.value)
     }
 
     @Test
-    fun filterTest() {
-        val json = JsonObject(
+    fun jsonArrayFilterTest() {
+        val json = jsonArrayOf(
+            JsonString("Alice"),
+            JsonNumber(30.0),
+            JsonBoolean(true),
+            jsonObjectOf(
+                "number" to JsonNumber(10),
+                "string_a" to JsonString("dev"),
+                "string_b" to JsonString("user")
+            ),
+            JsonNull()
+        )
+
+        val filteredExpected = jsonArrayOf(
+            jsonObjectOf(
+                "number" to JsonNumber(10),
+                "string_a" to JsonString("dev"),
+                "string_b" to JsonString("user")
+            )
+        )
+
+        val filtered = json.filter { element -> element is JsonObject }
+
+        assertEquals(filteredExpected, filtered)
+    }
+
+    @Test
+    fun jsonObjectFilterTest() {
+        val json = jsonObjectOf(
             "name" to JsonString("Alice"),
             "age" to JsonNumber(30.0),
             "active" to JsonBoolean(true),
-            "tags" to JsonArray(
+            "tags" to jsonArrayOf(
                 JsonNumber(10),
                 JsonString("dev"),
                 JsonString("user")
@@ -91,124 +135,75 @@ class Tests {
             "note" to JsonNull()
         )
 
-        val filteredObject = json.filter{ property -> property.getKey() == "tags" }
-        val tagsNullable: JsonArray? = filteredObject["tags"]
-
-        assertNotNull(tagsNullable)
-        val tags: JsonArray = tagsNullable!!
-
-        assertEquals(tags.size(), 3)
-
-        val number: JsonNumber? = tags[0]
-        val dev1: JsonString? = tags[1]
-        val user1: JsonString? = tags[2]
-
-        assertEquals(10, number?.value)
-        assertEquals("dev", dev1?.value)
-        assertEquals("user", user1?.value)
-
-        val filteredArray = tags.filter{ it is JsonString }
-
-        assertEquals(filteredArray.size(), 2)
-
-        val dev2: JsonString? = filteredArray[0]
-        val user2: JsonString? = filteredArray[1]
-
-        assertEquals("dev", dev2?.value)
-        assertEquals("user", user2?.value)
-
-    }
-
-    @Test
-    fun mappingTest() {
-        val json = JsonArray(
-            JsonNumber(10),
-            JsonNumber(0.5),
-            JsonString("user")
-        )
-
-        val mappedArray = json.map {
-            if(it is JsonNumber){
-                JsonNumber(it.value.toDouble() + 1)
-            } else it
-        }
-
-        val number1: JsonNumber? = mappedArray[0]
-        val number2: JsonNumber? = mappedArray[1]
-        val string: JsonString? = mappedArray[2]
-
-        assertEquals(11.0, number1?.value)
-        assertEquals(1.5, number2?.value)
-        assertEquals("user", string?.value)
-    }
-
-
-
-
-
-
-/*
-
-
-    @Test
-    fun contentTest() {
-        val json = JsonObject(
-            mutableMapOf(
-                "name" to JsonString("Alice"),
-                "age" to JsonNumber(30),
-                "active" to JsonBoolean(true),
-                "tags" to JsonArray(mutableListOf(
-                    JsonString("dev"),
-                    JsonString("user")
-                )),
-                "note" to JsonNull()
+        val filteredExpected = jsonObjectOf(
+            "tags" to jsonArrayOf(
+                JsonNumber(10),
+                JsonString("dev"),
+                JsonString("user")
             )
         )
-        assertEquals("Alice", (json.getProperty("name") as JsonString).getPrimitiveValue())
-        assertEquals(30.0, (json.getProperty("age") as JsonNumber).getPrimitiveValue())
-        assertEquals(true, (json.getProperty("active") as JsonBoolean).getPrimitiveValue())
-        val tags = json.getProperty("tags") as JsonArray
-        assertEquals("dev", (tags.getProperty(0) as JsonString).getPrimitiveValue())
-        assertEquals("user", (tags.getProperty(1) as JsonString).getPrimitiveValue())
-        assertTrue(json.getProperty("note") is JsonNull)
+
+        val filtered = json.filter { _, value -> value is JsonArray }
+
+        assertEquals(filteredExpected, filtered)
     }
 
+    @Test
+    fun jsonArrayCheckTypesTest() {
+        val jsonDifferentTypes = jsonObjectOf(
+            "ids" to jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            "tags" to jsonArrayOf(
+                JsonNumber(10),
+                JsonString("dev"),
+                JsonString("user")
+            ),
+        )
+
+        val jsonSameTypes = jsonObjectOf(
+            "ids" to jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            "tags" to jsonArrayOf(
+                JsonString("user"),
+                JsonString("dev"),
+                JsonString("user")
+            ),
+        )
+
+        assertEquals(jsonDifferentTypes.checkArrayTypes(), false)
+        assertEquals(jsonSameTypes.checkArrayTypes(), true)
+
+    }
 
     @Test
     fun serializeTest() {
-        val json = JsonObject(
-            mutableMapOf(
-                "name" to JsonString("Alice"),
-                "age" to JsonNumber(30.0),
-                "active" to JsonBoolean(true),
-                "tags" to JsonArray(mutableListOf(JsonString("dev"), JsonString("user"))),
-                "note" to JsonNull()
-            )
+        val json = jsonObjectOf(
+            "name" to JsonString("Alice"),
+            "age" to JsonNumber(30.0),
+            "active" to JsonBoolean(true),
+            "tags" to jsonArrayOf(
+                JsonString("dev"),
+                JsonString("user")
+            ),
+            "note" to JsonNull()
         )
         assertEquals("{\"name\": \"Alice\", \"age\": 30.0, \"active\": true, \"tags\": [\"dev\", \"user\"], \"note\": null}", json.toString())
+
+        val j = json.copy(mutableMapOf("name" to JsonString("Alice"),
+            "age" to JsonNumber(30.0),
+            "active" to JsonBoolean(true),
+            "tags" to jsonArrayOf(
+                JsonString("dev"),
+                JsonString("user")
+            ),
+            "note" to JsonNull()))
     }
 
-    @Test
-    fun filterTest() {
-        val json = JsonObject(
-            mutableMapOf(
-                "name" to JsonString("Alice"),
-                "age" to JsonNumber(30.0),
-                "active" to JsonBoolean(true),
-                "tags" to JsonArray(mutableListOf(JsonNumber(10), JsonString("dev"), JsonString("user"))),
-                "note" to JsonNull()
-            )
-        )
-        val filteredObject = json.filter{ property -> property.getKey() == "tags" }
-        val tagsObject = filteredObject.getProperty("tags") as JsonArray
-        assertEquals(10, (tagsObject.getProperty(0) as JsonNumber).getPrimitiveValue())
-        assertEquals("dev", (tagsObject.getProperty(1) as JsonString).getPrimitiveValue())
-        assertEquals("user", (tagsObject.getProperty(2) as JsonString).getPrimitiveValue())
 
-        val filteredArray = tagsObject.filter{ it is JsonString }
-        assertEquals("dev", (filteredArray.getProperty(0) as JsonString).getPrimitiveValue())
-        assertEquals("user", (filteredArray.getProperty(1) as JsonString).getPrimitiveValue())
-
-    }
-    */
 }

@@ -1,27 +1,49 @@
 package json.containers
 
 import json.JsonElement
+import javax.lang.model.type.NoType
+import kotlin.reflect.KClass
+
+import json.primitives.JsonPrimitive
 
 /**
- * A Json containing a List of JsonElement
- *
- * @property elementsArray the list of JsonElement
- * @constructor Creates a List containing the provided elements
+ * A json array containing elements of type JsonElement
  */
-class JsonArray(
-    vararg elementsArray: JsonElement,
+class JsonArray private constructor(
+    val elements: MutableList<JsonElement> = mutableListOf()
 ): JsonContainer<JsonElement>() {
 
-    val elements: MutableList<JsonElement> = mutableListOf()
+    /**
+     * Companion object containing factory methods for the JsonArray class
+     */
+    companion object Constructor {
 
-    init {
-        for (element in elementsArray) {
-            elements.add(element)
+        /**
+         * Factory method of JsonArray
+         *
+         * @param elementsArrayArray Array of JsonElement instances
+         */
+        fun jsonArrayOf(vararg elementsArray: JsonElement): JsonArray {
+            val elements: MutableList<JsonElement> = mutableListOf()
+
+            for (element in elementsArray)
+                elements.add(element)
+
+            return JsonArray(elements)
         }
     }
 
-    private constructor(elementsList: List<JsonElement>): this() {
-        elements.addAll(elementsList)
+    /**
+     * Verifies if the JsonArray only has JsonElements of the same type
+     *
+     * @return true if all have the same type false if not
+     */
+    fun isSameType(): Boolean {
+        if (elements.isNotEmpty()) {
+            val type: KClass<out Any> = elements[0]::class
+            return elements.all { it::class != type }
+        }
+        return true
     }
 
     /**
@@ -39,6 +61,28 @@ class JsonArray(
      */
     fun size(): Int = elements.size
 
+    fun copy(): JsonArray {
+        return JsonArray(elements.toMutableList())
+    }
+
+    /**
+     * Hash code method for a JsonArray instance
+     *
+     * @return Int value of hash code
+     */
+    override fun hashCode(): Int {
+        return elements.hashCode()
+    }
+
+    /**
+     * Element wise comparison between two instances of JsonArray
+     *
+     * @param other Instance of JsonArray to compare
+     * @return Boolean value indicating if compared instances have the same content
+     */
+    override operator fun equals(other: Any?): Boolean {
+        return other is JsonArray && elements == other.elements
+    }
 
     /**
      * Gets array element using [index]
@@ -46,15 +90,8 @@ class JsonArray(
      * @param index Index for the element to get from [elements]
      * @return the filtered JsonArray
      */
-    inline operator fun <reified JsonType> get(index: Int): JsonType? {     //TODO Exception quando element não é JsonElement
-        require(index < size() || index >= 0)
-
-        val element = elements[index]
-
-        if (element is JsonType)
-            return element as JsonType
-        else
-            return null
+    operator fun get(index: Int): JsonElement? {
+        return elements[index]
     }
 
     /**
@@ -69,13 +106,33 @@ class JsonArray(
     }
 
     /**
+     * Removes element within the json array
+     *
+     * @param index of the element to remove
+     * @return the removed element or null if not found.
+     */
+    fun removeAt(index: Int): JsonElement {
+        return elements.removeAt(index)
+    }
+
+    /**
+     * Removes element within the json array
+     *
+     * @param value equaling the element to remove
+     * @return boolean value indicating if the element was found and removed
+     */
+    fun remove(value: JsonElement): Boolean {
+        return elements.remove(value)
+    }
+
+    /**
      * Applies a filter to the List
      *
      * @return the filtered JsonArray
      */
-    override fun filter(check: (JsonElement) -> Boolean): JsonArray {
+    fun filter(check: (JsonElement) -> Boolean): JsonArray {       //TODO override de interface ou super class?
         val filtered = elements.filter { check(it) }
-        return JsonArray(filtered)
+        return JsonArray(filtered.toMutableList())
     }
 
     /**
