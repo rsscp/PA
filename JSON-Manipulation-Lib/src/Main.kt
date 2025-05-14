@@ -1,4 +1,5 @@
 import json.converter.convert
+import json.rest.Server
 
 
 enum class Color {
@@ -7,5 +8,5 @@ enum class Color {
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
-    convert(Color.RED)
+    Server::class.members.forEach { println(it) }
 }
