@@ -18,7 +18,7 @@ class JsonArray private constructor(
         /**
          * Factory method of JsonArray
          *
-         * @param elementsArrayArray Array of JsonElement instances
+         * @param elementsArray Array of JsonElement instances
          */
         fun jsonArrayOf(vararg elementsArray: JsonElement): JsonArray {
             val elements: MutableList<JsonElement> = mutableListOf()
@@ -27,6 +27,15 @@ class JsonArray private constructor(
                 elements.add(element)
 
             return JsonArray(elements)
+        }
+
+        /**
+         * Factory method of JsonArray
+         *
+         * @param elementsList List of JsonElement instances
+         */
+        fun jsonArrayOf(elementsList: List<JsonElement>): JsonArray {
+            return JsonArray(elementsList.toMutableList())
         }
     }
 

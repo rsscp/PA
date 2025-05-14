@@ -27,6 +27,29 @@ class JsonObject private constructor(
 
             return JsonObject(properties)
         }
+
+        /**
+         * Factory method of JsonObject
+         *
+         * @param propertiesIt Iterable of Pair<String, JsonElement>
+         */
+        fun jsonObjectOf(propertiesIt: Iterable<Pair<String, JsonElement>>): JsonObject {
+            val properties: MutableMap<String, JsonElement> = mutableMapOf()
+
+            for (property in propertiesIt)
+                properties.put(property.first, property.second)
+
+            return JsonObject(properties)
+        }
+
+        /**
+         * Factory method of JsonObject
+         *
+         * @param propertiesMap Map<String, JsonElement> to use for JsonObject creation
+         */
+        fun jsonObjectOf(propertiesMap: Map<String, JsonElement>): JsonObject {
+            return JsonObject(propertiesMap.toMutableMap())
+        }
     }
 
     /**

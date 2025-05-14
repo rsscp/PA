@@ -4,6 +4,7 @@ import json.containers.JsonArray.Constructor.jsonArrayOf
 import json.containers.JsonArray
 import json.containers.JsonObject.Constructor.jsonObjectOf
 import json.containers.JsonObject
+import json.converter.convert
 import json.primitives.JsonBoolean
 import json.primitives.JsonNull
 import json.primitives.JsonNumber
@@ -14,6 +15,23 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class Tests {
+
+    enum class EvalType {
+        TEST, PROJECT, EXAM
+    }
+
+    data class Course(
+        val name: String,
+        val credits: Int,
+        val evaluation: List<EvalItem>
+    )
+
+    data class EvalItem(
+        val name: String,
+        val percentage: Double,
+        val mandatory: Boolean,
+        val type: EvalType?
+    )
 
     @Test
     fun primitivesTest() {
@@ -220,5 +238,38 @@ class Tests {
         )
 
         assertEquals(json1, json2)
+    }
+
+    @Test
+    fun jsonConvertionTest() {
+        val course = Course(
+            "PA", 6, listOf(
+                EvalItem("quizzes", .2, false, null),
+                EvalItem("project", .8, true, EvalType.PROJECT)
+            )
+        )
+
+        val json = jsonObjectOf(
+            "name" to JsonString("PA"),
+            "credits" to JsonNumber(6),
+            "evaluation" to jsonArrayOf(
+                jsonObjectOf(
+                    "name" to JsonString("quizzes"),
+                    "percentage" to JsonNumber(.2),
+                    "mandatory" to JsonBoolean(false),
+                    "type" to JsonNull()
+                ),
+                jsonObjectOf(
+                    "name" to JsonString("project"),
+                    "percentage" to JsonNumber(.8),
+                    "mandatory" to JsonBoolean(true),
+                    "type" to JsonString("PROJECT")
+                )
+            )
+        )
+
+        val converted = convert(course)
+
+        assertEquals(json, converted)
     }
 }
