@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  * A json array containing elements of type JsonElement
  */
 class JsonArray private constructor(
-    val elements: MutableList<JsonElement> = mutableListOf()
+    private val elements: MutableList<JsonElement> = mutableListOf()
 ): JsonContainer<JsonElement>() {
 
     /**
