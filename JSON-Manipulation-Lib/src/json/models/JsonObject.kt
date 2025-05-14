@@ -1,4 +1,4 @@
-package json.containers
+package json.models
 
 import json.JsonElement
 
@@ -7,7 +7,7 @@ import json.JsonElement
  */
 class JsonObject private constructor(
     private val properties: MutableMap<String, JsonElement> = mutableMapOf()
-): JsonContainer<JsonElement>() {
+): JsonElement() {
 
     /**
      * Companion object containing factory methods for the JsonObject class

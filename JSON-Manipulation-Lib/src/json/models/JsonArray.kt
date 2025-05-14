@@ -1,4 +1,4 @@
-package json.containers
+package json.models
 
 import json.JsonElement
 import kotlin.reflect.KClass
@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  */
 class JsonArray private constructor(
     private val elements: MutableList<JsonElement> = mutableListOf()
-): JsonContainer<JsonElement>() {
+): JsonElement() {
 
     /**
      * Companion object containing factory methods for the JsonArray class
@@ -47,7 +47,7 @@ class JsonArray private constructor(
     fun isSameType(): Boolean {
         if (elements.isNotEmpty()) {
             val type: KClass<out Any> = elements[0]::class
-            return elements.all { it::class != type }
+            return elements.all { it::class == type }
         }
         return true
     }

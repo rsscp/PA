@@ -3,9 +3,12 @@ package json.converter
 import kotlin.reflect.full.memberProperties
 
 import json.JsonElement
-import json.containers.JsonArray.Constructor.jsonArrayOf
-import json.containers.JsonObject.Constructor.jsonObjectOf
-import json.primitives.*
+import json.models.JsonArray.Constructor.jsonArrayOf
+import json.models.JsonObject.Constructor.jsonObjectOf
+import json.models.JsonBoolean
+import json.models.JsonNull
+import json.models.JsonNumber
+import json.models.JsonString
 import kotlin.collections.map
 
 fun convert(obj: Any?): JsonElement {

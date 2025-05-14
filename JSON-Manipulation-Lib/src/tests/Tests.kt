@@ -1,17 +1,16 @@
 package tests
 
-import json.containers.JsonArray.Constructor.jsonArrayOf
-import json.containers.JsonArray
-import json.containers.JsonObject.Constructor.jsonObjectOf
-import json.containers.JsonObject
+import json.models.JsonArray.Constructor.jsonArrayOf
+import json.models.JsonArray
+import json.models.JsonObject.Constructor.jsonObjectOf
+import json.models.JsonObject
 import json.converter.convert
-import json.primitives.JsonBoolean
-import json.primitives.JsonNull
-import json.primitives.JsonNumber
-import json.primitives.JsonString
+import json.models.JsonBoolean
+import json.models.JsonNull
+import json.models.JsonNumber
+import json.models.JsonString
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class Tests {

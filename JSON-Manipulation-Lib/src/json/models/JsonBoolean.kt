@@ -1,4 +1,4 @@
-package json.primitives
+package json.models
 
 import json.JsonElement
 
