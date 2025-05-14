@@ -1,8 +1,6 @@
 package json.containers
 
 import json.JsonElement
-import json.primitives.JsonNull
-import java.util.Properties
 
 /**
  * A json object containing a list of properties composed by a key of type String and a value of type JsonElement
@@ -72,7 +70,7 @@ class JsonObject private constructor(
      * @param other Instance of JsonObject to compare
      * @return Boolean value indicating if compared instances have the same content
      */
-    override operator fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         return other is JsonObject && properties == other.properties
     }
 

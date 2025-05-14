@@ -1,10 +1,7 @@
 package json.containers
 
 import json.JsonElement
-import javax.lang.model.type.NoType
 import kotlin.reflect.KClass
-
-import json.primitives.JsonPrimitive
 
 /**
  * A json array containing elements of type JsonElement
@@ -80,7 +77,7 @@ class JsonArray private constructor(
      * @param other Instance of JsonArray to compare
      * @return Boolean value indicating if compared instances have the same content
      */
-    override operator fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         return other is JsonArray && elements == other.elements
     }
 
