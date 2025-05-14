@@ -1,45 +1,87 @@
 package json.containers
 
 import json.JsonElement
-import json.representations.JsonProperty
 
 /**
- * A Json containing a List of JsonProperty
- *
- * @property propertiesArray the list of Pair<String, JsonElement>
- * @constructor Creates a List containing the provided elements
+ * A json object containing a list of properties composed by a key of type String and a value of type JsonElement
  */
-class JsonObject(
-    vararg propertiesArray: Pair<String, JsonElement>
-): JsonContainer<JsonProperty>() {
+class JsonObject private constructor(
+    private val properties: MutableMap<String, JsonElement> = mutableMapOf()
+): JsonContainer<JsonElement>() {
 
-    val properties: MutableMap<String, JsonElement> = mutableMapOf()
+    /**
+     * Companion object containing factory methods for the JsonObject class
+     */
+    companion object Constructor {
 
-    init {
-        for (property in propertiesArray) {
-            properties.put(property.first, property.second)
+        /**
+         * Factory method of JsonObject
+         *
+         * @param propertiesArray Array of Pair<String, JsonElement> instances
+         */
+        fun jsonObjectOf(vararg propertiesArray: Pair<String, JsonElement>): JsonObject {
+            val properties: MutableMap<String, JsonElement> = mutableMapOf()
+
+            for (property in propertiesArray)
+                properties.put(property.first, property.second)
+
+            return JsonObject(properties)
         }
     }
 
-    private constructor(propertiesList: List<JsonProperty>): this() {
-        propertiesList.forEach { properties.put(it.getKey(), it.getPropertyValue()) }
+    /**
+     * Iterates through the JsonObject to verify if every JsonArray contains only values of the same type for that array
+     *
+     * @return the combined returns of isSameType
+     */
+    fun checkArrayTypes(): Boolean {
+        var result = true
+
+        accept {
+            if (it is JsonArray) {
+                result = result && it.isSameType()
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * Copy method for a JsonObject instance
+     *
+     * @return Identical JsonObject instance
+     */
+    fun copy(): JsonObject {
+        return JsonObject(properties.toMutableMap())
+    }
+
+    /**
+     * Hash code method for a JsonObject instance
+     *
+     * @return Int value of hash code
+     */
+    override fun hashCode(): Int {
+        return properties.hashCode()
+    }
+
+    /**
+     * Properties wise comparison between two instances of JsonObject
+     *
+     * @param other Instance of JsonObject to compare
+     * @return Boolean value indicating if compared instances have the same content
+     */
+    override fun equals(other: Any?): Boolean {
+        return other is JsonObject && properties == other.properties
     }
 
     /**
      * Gets object property using [key]
      *
-     * @param key Key identifying the property to get from [properties]
+     * @param key Key of type String identifying the property to get from an instance of JsonObject
      * @return the filtered JsonObject
      */
-    inline operator fun <reified JsonType> get(key: String): JsonType? {
-        require(key != "")
-
-        val element = properties[key] ?: return null
-
-        if (element is JsonType)
-            return element as JsonType
-        else
-            return null
+    operator fun get(key: String): JsonElement? {
+        return properties[key]
     }
 
     /**
@@ -54,26 +96,45 @@ class JsonObject(
     }
 
     /**
+     * Removes element within the json object
+     *
+     * @param key of the property to remove
+     * @return removed element or null if [key] was not not found.
+     */
+    fun remove(key: String): JsonElement? {
+        return properties.remove(key)
+    }
+
+    /**
+     * Removes element within the json object
+     *
+     * @param key of the property to remove
+     * @param value equaling the element to remove
+     * @return boolean value indicating if the element was found and removed
+     */
+    fun remove(key: String, value: JsonElement): Boolean {
+        return properties.remove(key, value)
+    }
+
+    /**
      * Applies a filter to the Map
      *
+     * @param check Function with parameters key of type String and value of type JsonElement and returns a boolean value indicating of the evaluated property passes the filter
      * @return the filtered JsonObject
      */
-    override fun filter(check: (property: JsonProperty) -> Boolean): JsonObject {
-        val filtered = JsonObject()
-        properties.forEach {
-            if (check(JsonProperty(it.key, it.value)))
-                filtered.properties.put(it.key, it.value)
-        }
-        return filtered
+    fun filter(check: (key: String, value: JsonElement) -> Boolean): JsonObject {               //TODO override????
+        val filtered = properties.filter { check(it.key, it.value) }
+        return JsonObject(filtered.toMutableMap())
     }
 
     /**
      * Iterates the map recursively applying [visitor]
      *
+     * @param visitor Function with parameter of type JsonElement which acts on each property in a JsonObject instance
      */
     override fun accept(visitor: (JsonElement) -> Unit): Unit {
         super.accept(visitor)
-        properties.forEach { JsonProperty(it.key, it.value).accept(visitor) }
+        properties.forEach { it.value.accept(visitor) }
     }
 
     /**
