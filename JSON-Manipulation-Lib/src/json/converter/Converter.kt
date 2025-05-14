@@ -13,7 +13,7 @@ fun convert(obj: Any?): JsonElement {
         return JsonNull()
 
     if (obj::class.isData) {
-        convertTypeData(obj)
+        return convertTypeData(obj)
     }
 
     return when (obj) {
