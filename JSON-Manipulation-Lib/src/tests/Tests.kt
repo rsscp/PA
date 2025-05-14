@@ -218,5 +218,7 @@ class Tests {
             ),
             "note" to JsonNull()
         )
+
+        assertEquals(json1, json2)
     }
 }
