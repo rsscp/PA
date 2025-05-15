@@ -1,4 +1,4 @@
-package json
+package json.models
 
 /**
  * The super class for all the primitives

@@ -2,7 +2,7 @@ package json.converter
 
 import kotlin.reflect.full.memberProperties
 
-import json.JsonElement
+import json.models.JsonElement
 import json.models.JsonArray.Constructor.jsonArrayOf
 import json.models.JsonObject.Constructor.jsonObjectOf
 import json.models.JsonBoolean

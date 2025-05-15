@@ -1,6 +1,6 @@
 package json.models
 
-import json.JsonElement
+import json.models.JsonElement
 
 /**
  * A json object containing a list of properties composed by a key of type String and a value of type JsonElement
