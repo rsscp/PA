@@ -91,9 +91,19 @@ class MappingHandler(
 
     private fun putQueryParametersReady(query: String): Boolean {
         println(query)
-        TODO("Retirar parametros da query")
-        TODO("Inserir em parametersReady")
-        TODO("Retornar boolean a indicar se os parametros da query nao correspondem aos parametros em queryParameterized")
+        val params: Map<String, String> = query
+            .split("&")
+            .map { it.split("=", limit = 2) }
+            .associate { it[0] to it.getOrElse(1) { "" } }
+
+        queryParameterized
+            .filter { it.name in params }
+            .forEach { param ->
+                println(params.keys)
+                println(params[param.name])
+                putParameterReady(param, params[param.name] ?: "")
+            }
+
         return true
     }
 
