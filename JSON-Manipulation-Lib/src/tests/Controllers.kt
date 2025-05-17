@@ -28,4 +28,12 @@ class Controller {
         @HeaderParam n: Int,
         @HeaderParam text: String
     ): Map<String, String> = mapOf(text to text.repeat(n))
+
+    @Method(HttpMethod.GET)
+    @Mapping("complex/{one}/{three}/{four}")
+    fun path(
+        @PathParam one: String,
+        @PathParam three: Double,
+        @PathParam four: Boolean,
+    ): String = one + three + four + "!"
 }

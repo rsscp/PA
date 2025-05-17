@@ -72,10 +72,11 @@ class ControllerHandler(controller: Any): HttpHandler {
 
     override fun handle(exchange: HttpExchange) {
         val path = exchange.requestURI?.path ?: ""
+        val query = exchange.requestURI?.query ?: ""
         val method = exchange.requestMethod ?: ""
 
         mappings.forEach {
-            if (it.executeReady(path, method)) { //Primeira match
+            if (it.executeReady(method, path, query)) { //Primeira match
                 sendResponse(
                     exchange,
                     200,
