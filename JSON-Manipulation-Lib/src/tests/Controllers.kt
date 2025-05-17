@@ -1,10 +1,10 @@
 package tests
 
-import json.rest.Mapping;
 import json.rest.HeaderParam;
-import json.rest.HttpMethod
 import json.rest.Method
 import json.rest.PathParam;
+import json.rest.Mapping;
+import json.rest.HttpMethod
 
 @Mapping("api")
 class Controller {

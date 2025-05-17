@@ -20,8 +20,7 @@ fun convert(obj: Any?): JsonElement {
     }
 
     return when (obj) {
-        is Int -> JsonNumber(obj)
-        is Double -> JsonNumber(obj)
+        is Number -> JsonNumber(obj)
         is Boolean -> JsonBoolean(obj)
         is String -> JsonString(obj)
         is Enum<*> -> JsonString(obj.toString())
@@ -48,5 +47,5 @@ fun convertTypeMap(obj: Map<*,*>): JsonElement = jsonObjectOf(
 )
 
 fun convertTypeList(obj: List<*>): JsonElement = jsonArrayOf(
-    obj.map { convert(it) }
+        obj.map { convert(it) }
 )

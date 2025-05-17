@@ -1,18 +1,8 @@
 package json.rest
 
 import java.net.InetSocketAddress
-import java.net.URI
-import kotlin.reflect.*
 import kotlin.reflect.full.*
 import com.sun.net.httpserver.HttpServer
-import com.sun.net.httpserver.HttpHandler
-import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.Request
-import java.io.IOException
-import java.io.OutputStream
-
-import json.models.JsonElement
-import json.models.JsonNull
 
 
 class Server(vararg controllersArray: Any) {
@@ -38,8 +28,7 @@ class Server(vararg controllersArray: Any) {
         controllers.forEach {
             val annotation = it::class.findAnnotation<Mapping>()
             val path = "/" + annotation?.path
-            println("Mapping $path")
-            server.createContext(path, Handler(it))
+            server.createContext(path, ControllerHandler(it))
         }
     }
 }
