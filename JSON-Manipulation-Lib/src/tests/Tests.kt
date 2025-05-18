@@ -1,17 +1,15 @@
 package tests
 
-import json.models.JsonArray.Constructor.jsonArrayOf
-import json.models.JsonArray
-import json.models.JsonObject.Constructor.jsonObjectOf
-import json.models.JsonObject
 import json.converter.convert
-import json.models.JsonBoolean
-import json.models.JsonNull
-import json.models.JsonNumber
-import json.models.JsonString
-
+import json.models.*
+import json.models.JsonArray.Constructor.jsonArrayOf
+import json.models.JsonObject.Constructor.jsonObjectOf
+import json.rest.Server
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+
 
 class Tests {
 
@@ -253,5 +251,22 @@ class Tests {
         val converted = convert(course)
 
         assertEquals(json, converted)
+    }
+
+    @Test
+    fun jsonGetNumbers() {
+        val server = Server(Controller())
+        server.start()
+
+        val response = getJsonString("http://localhost:8080/api/ints")
+        val expectedResponse = jsonArrayOf(
+            JsonNumber(1),
+            JsonNumber(2),
+            JsonNumber(3)
+        ).serialize()
+
+        server.stop()
+
+        assertEquals(response, expectedResponse)
     }
 }

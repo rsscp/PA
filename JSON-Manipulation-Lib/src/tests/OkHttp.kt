@@ -1,30 +1,18 @@
 package tests
 
-class OkHttp {
-/*
-    fun GET(url: String){
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(url)
-            .build()
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okio.IOException
 
-        val call = client.newCall(request)
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+fun getJsonString(url: String): String {
+    val client: OkHttpClient = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .build()
 
-                    for ((name, value) in response.headers) {
-                        println("$name: $value")
-                    }
-
-                    println(response.body!!.string())
-                }
-            }
-        })
+    client.newCall(request).execute().use { response ->
+        if (!response.isSuccessful)
+            throw IOException("Unexpected code $response")
+        return response.body!!.string()
     }
-    */
 }

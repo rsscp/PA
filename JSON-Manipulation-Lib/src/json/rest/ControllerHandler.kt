@@ -9,8 +9,8 @@ import kotlin.reflect.full.hasAnnotation
 
 class ControllerHandler(controller: Any): HttpHandler {
 
-    val rootPath: String
-    val mappings: List<MappingHandler>
+    private val rootPath: String
+    private val mappings: List<MappingHandler>
 
     init {
         if (!controller::class.hasAnnotation<Mapping>())

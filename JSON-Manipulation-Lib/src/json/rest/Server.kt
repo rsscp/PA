@@ -8,6 +8,8 @@ import com.sun.net.httpserver.HttpServer
 class Server(vararg controllersArray: Any) {
 
     val controllers: MutableList<Any>
+    val socket: InetSocketAddress
+    val server: HttpServer
 
     init {
         controllersArray.forEach {
@@ -15,12 +17,12 @@ class Server(vararg controllersArray: Any) {
                 throw IllegalArgumentException("Controller must have Mapping annotation")
         }
         controllers = mutableListOf(*controllersArray)
+        socket = InetSocketAddress(8080)
+        server = HttpServer.create(socket, 1)
+        createContext(server)
     }
 
     fun start() {
-        val socket = InetSocketAddress(8080)
-        val server = HttpServer.create(socket, 1)
-        createContext(server)
         server.start()
     }
 
@@ -30,5 +32,9 @@ class Server(vararg controllersArray: Any) {
             val path = "/" + annotation?.path
             server.createContext(path, ControllerHandler(it))
         }
+    }
+
+    fun stop() {
+        server.stop(0)
     }
 }
