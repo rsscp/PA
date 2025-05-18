@@ -69,8 +69,8 @@ class ControllerHandler(controller: Any): HttpHandler {
     }
 
     override fun handle(exchange: HttpExchange) {
-        val path = exchange.requestURI?.path ?: ""
-        val query = exchange.requestURI?.query ?: ""
+        val path = exchange.requestURI.path ?: ""
+        val query = exchange.requestURI.query ?: ""
         val method = exchange.requestMethod ?: ""
 
         mappings.forEach {
@@ -78,9 +78,9 @@ class ControllerHandler(controller: Any): HttpHandler {
                 sendResponse(
                     exchange,
                     200,
-                    it.execute().serialize()
+                    it.execute()
                 )
-                return
+                return@forEach
             }
         }
         sendResponse(

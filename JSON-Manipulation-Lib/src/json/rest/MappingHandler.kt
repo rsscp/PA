@@ -68,29 +68,26 @@ class MappingHandler(
     }
 
     private fun putPathParametersReady(path: String): Boolean {
-        val match = mutableListOf<Boolean>()
         val split = path
             .substring(1)
             .split("/")
 
-        pathParameterized.forEachIndexed { i, pair ->
-            val name = pair.first
-            val param = pair.second
-            if (param != null) {
-                match.add(true)
-                putParameterReady(param, split[i])
-            } else if (name == split[i]) {
-                match.add(true)
-            } else {
-                return false
-            }
-        }
+        val indexed = pathParameterized.mapIndexed { i, pair -> i to pair }
+        val paramIndexed = indexed.filter { it.second.second != null }
+        val pathIndexed = indexed.filter { it.second.second == null }
 
-        return match.all { it }
+        return paramIndexed.all {
+            val index = it.first
+            val param = it.second.second
+            putParameterReady(param!!, split[index])
+        } && pathIndexed.all {
+            val index = it.first
+            val name = it.second.first
+            name == split[index]
+        }
     }
 
     private fun putQueryParametersReady(query: String): Boolean {
-        println(query)
         val params: Map<String, String> = query
             .split("&")
             .map { it.split("=", limit = 2) }
@@ -99,20 +96,23 @@ class MappingHandler(
         queryParameterized
             .filter { it.name in params }
             .forEach { param ->
-                println(params.keys)
-                println(params[param.name])
                 putParameterReady(param, params[param.name] ?: "")
             }
 
         return true
     }
 
-    private fun putParameterReady(parameter: KParameter, value: String) {
-        when (parameter.type.classifier) {
-            String::class -> parametersReady[parameter] = value
-            Int::class -> parametersReady[parameter] = value.toInt()
-            Double::class -> parametersReady[parameter] = value.toDouble()
-            Boolean::class -> parametersReady[parameter] = value.toBoolean()
+    private fun putParameterReady(parameter: KParameter, value: String): Boolean {
+        try {
+            when (parameter.type.classifier) {
+                String::class -> parametersReady[parameter] = value
+                Int::class -> parametersReady[parameter] = value.toInt()
+                Double::class -> parametersReady[parameter] = value.toDouble()
+                Boolean::class -> parametersReady[parameter] = value.toBoolean()
+            }
+            return true
+        } catch (ex: Exception) {
+            return false
         }
     }
 
@@ -120,7 +120,7 @@ class MappingHandler(
         parametersReady.clear()
     }
 
-    fun execute(): JsonElement {
-        return convert(function.callBy(parametersReady))
+    fun execute(): String {
+        return convert(function.callBy(parametersReady)).serialize()
     }
 }
