@@ -269,4 +269,19 @@ class Tests {
 
         assertEquals(response, expectedResponse)
     }
+
+    @Test
+    fun jsonGetArgs() {
+        val server = Server(Controller())
+        server.start()
+
+        val response = getJsonString("http://localhost:8080/api/args?n=4&text=teste")
+        val expectedResponse = jsonObjectOf(
+            "teste" to JsonString("teste"+"teste"+"teste"+"teste")
+        ).serialize()
+
+        server.stop()
+
+        assertEquals(response, expectedResponse)
+    }
 }

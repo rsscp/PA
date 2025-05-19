@@ -72,19 +72,18 @@ class MappingHandler(
             .substring(1)
             .split("/")
 
-        val indexed = pathParameterized.mapIndexed { i, pair -> i to pair }
-        val paramIndexed = indexed.filter { it.second.second != null }
-        val pathIndexed = indexed.filter { it.second.second == null }
+        return pathParameterized
+            .mapIndexed { i, pair -> i to pair }
+            .all {
+                val index = it.first
+                val name = it.second.first
+                val param = it.second.second
 
-        return paramIndexed.all {
-            val index = it.first
-            val param = it.second.second
-            putParameterReady(param!!, split[index])
-        } && pathIndexed.all {
-            val index = it.first
-            val name = it.second.first
-            name == split[index]
-        }
+                if (param == null)
+                    name == split[index]
+                else
+                    putParameterReady(param, split[index])
+            }
     }
 
     private fun putQueryParametersReady(query: String): Boolean {

@@ -5,7 +5,7 @@ import okhttp3.Request
 import okio.IOException
 
 fun getJsonString(url: String): String {
-    val client: OkHttpClient = OkHttpClient()
+    val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)
         .build()

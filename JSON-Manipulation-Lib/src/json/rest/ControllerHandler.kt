@@ -80,7 +80,7 @@ class ControllerHandler(controller: Any): HttpHandler {
                     200,
                     it.execute()
                 )
-                return@forEach
+                return
             }
         }
         sendResponse(
