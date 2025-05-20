@@ -17,4 +17,27 @@ To create a JsonObject from a supported type Element using jsonObjectOf()
 note: for Number JsonElement(v) will be JsonNumber(v) and "key" can be any string
 jsonObjectOf() can also use Iterable<Pair<String, JsonElement>> or Map<String, JsonElement> 
 
+To filter an JsonObject or JsonArray you use .filter(expression)
 
+    val filtered = json.filter { _, value -> value is JsonNumber }
+
+note:in this case filtered will return the JsonObject with the key/value pairs that have a value::JsonNumber
+
+
+To perform a mapping function on a JsonArray you use .map()
+
+    val mapped = json.map {
+        if (it is JsonNumber)
+            JsonNumber(it.value.toDouble() + 1)
+        else
+            it
+    }
+note: this specific function will increment any JsonNumber in the Array
+
+To check if all JsonArrays contain values of the same type
+
+    val isSame = json.checkArrayTypes()
+
+To print the JsonObject as a string use
+
+    json.serialize()

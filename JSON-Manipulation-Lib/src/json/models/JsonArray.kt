@@ -136,7 +136,7 @@ class JsonArray private constructor(
      *
      * @return the filtered JsonArray
      */
-    fun filter(check: (JsonElement) -> Boolean): JsonArray {       //TODO override de interface ou super class?
+    fun filter(check: (JsonElement) -> Boolean): JsonArray {
         val filtered = elements.filter { check(it) }
         return JsonArray(filtered.toMutableList())
     }
