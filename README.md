@@ -55,3 +55,25 @@ To print the JsonObject as a string use
 
     json.serialize()
 
+---
+
+To turn any supported type or data class containing supported types use convert(p:Any?)
+    
+    val course = Course(
+        "PA", 6, listOf(
+            EvalItem("quizzes", .2, false, null),
+            EvalItem("project", .8, true, EvalType.PROJECT)
+        )
+    )
+    val converted = convert(course)
+
+Supported Types:
+- Int, 
+- Double, 
+- Boolean, 
+- String, 
+- List< supported type >, 
+- Enums, 
+- null, 
+- Data classes with properties whose type is supported, 
+- Maps (Map) that associate Strings (keys) to any of the above Kotlin elements
