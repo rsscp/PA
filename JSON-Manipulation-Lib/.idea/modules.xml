@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JSON-Manipulation-Lib.iml" filepath="$PROJECT_DIR$/JSON-Manipulation-Lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JSON-Manipulation-Lib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/JSON-Manipulation-Lib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JSON-Manipulation-Lib.test.iml" filepath="$PROJECT_DIR$/.idea/modules/JSON-Manipulation-Lib.test.iml" />
     </modules>
   </component>
 </project>
