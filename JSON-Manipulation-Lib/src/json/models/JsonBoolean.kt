@@ -1,7 +1,5 @@
 package json.models
 
-import json.JsonElement
-
 /**
  * A Json containing a Boolean
  *

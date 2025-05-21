@@ -1,13 +1,13 @@
 package json.models
 
-import json.JsonElement
+import json.models.JsonElement
 
 /**
  * A json object containing a list of properties composed by a key of type String and a value of type JsonElement
  */
 class JsonObject private constructor(
     private val properties: MutableMap<String, JsonElement> = mutableMapOf()
-): JsonElement() {
+): JsonContainer() {
 
     /**
      * Companion object containing factory methods for the JsonObject class
@@ -50,23 +50,6 @@ class JsonObject private constructor(
         fun jsonObjectOf(propertiesMap: Map<String, JsonElement>): JsonObject {
             return JsonObject(propertiesMap.toMutableMap())
         }
-    }
-
-    /**
-     * Iterates through the JsonObject to verify if every JsonArray contains only values of the same type for that array
-     *
-     * @return the combined returns of isSameType
-     */
-    fun checkArrayTypes(): Boolean {
-        var result = true
-
-        accept {
-            if (it is JsonArray) {
-                result = result && it.isSameType()
-            }
-        }
-
-        return result
     }
 
     /**
@@ -122,16 +105,6 @@ class JsonObject private constructor(
      * Removes element within the json object
      *
      * @param key of the property to remove
-     * @return removed element or null if [key] was not not found.
-     */
-    fun remove(key: String): JsonElement? {
-        return properties.remove(key)
-    }
-
-    /**
-     * Removes element within the json object
-     *
-     * @param key of the property to remove
      * @param value equaling the element to remove
      * @return boolean value indicating if the element was found and removed
      */
@@ -140,13 +113,23 @@ class JsonObject private constructor(
     }
 
     /**
+     * Removes element within the json object
+     *
+     * @param key of the property to remove
+     * @return removed element or null if [key] was not not found.
+     */
+    fun removeAt(key: String): JsonElement? {
+        return properties.remove(key)
+    }
+
+    /**
      * Applies a filter to the Map
      *
      * @param check Function with parameters key of type String and value of type JsonElement and returns a boolean value indicating of the evaluated property passes the filter
      * @return the filtered JsonObject
      */
-    fun filter(check: (key: String, value: JsonElement) -> Boolean): JsonObject {               //TODO override????
-        val filtered = properties.filter { check(it.key, it.value) }
+    fun filter(check: ((String, JsonElement) -> Boolean)): JsonObject {
+        val filtered = properties.filter { (key, value) -> check(key, value) }
         return JsonObject(filtered.toMutableMap())
     }
 
@@ -165,6 +148,7 @@ class JsonObject private constructor(
      *
      * @return the serialized Map
      */
-    override fun serialize(): String = "{" + properties.entries.joinToString { (key, value) -> "\"${key}\": " + value.serialize()} + "}"
+    override fun serialize(): String =
+        "{" + properties.entries.joinToString(",") { (key, value) -> "\"${key}\":" + value.serialize()} + "}"
 
 }

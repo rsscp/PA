@@ -1,6 +1,6 @@
 package json.models
 
-import json.JsonElement
+import json.models.JsonElement
 
 class JsonNull(): JsonElement() {
 

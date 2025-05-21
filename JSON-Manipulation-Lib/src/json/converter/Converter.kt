@@ -2,7 +2,7 @@ package json.converter
 
 import kotlin.reflect.full.memberProperties
 
-import json.JsonElement
+import json.models.JsonElement
 import json.models.JsonArray.Constructor.jsonArrayOf
 import json.models.JsonObject.Constructor.jsonObjectOf
 import json.models.JsonBoolean
@@ -12,6 +12,7 @@ import json.models.JsonString
 import kotlin.collections.map
 
 fun convert(obj: Any?): JsonElement {
+
     if (obj == null)
         return JsonNull()
 
@@ -20,8 +21,7 @@ fun convert(obj: Any?): JsonElement {
     }
 
     return when (obj) {
-        is Int -> JsonNumber(obj)
-        is Double -> JsonNumber(obj)
+        is Number -> JsonNumber(obj)
         is Boolean -> JsonBoolean(obj)
         is String -> JsonString(obj)
         is Enum<*> -> JsonString(obj.toString())
@@ -34,19 +34,20 @@ fun convert(obj: Any?): JsonElement {
     }
 }
 
-fun convertTypeData(obj: Any): JsonElement = jsonObjectOf (
+internal fun convertTypeData(obj: Any): JsonElement = jsonObjectOf (
     obj::class.memberProperties.map {
         val value = it.getter.call(obj)
         it.name to convert(value)
     }
 )
 
-fun convertTypeMap(obj: Map<*,*>): JsonElement = jsonObjectOf(
+@Suppress("UNCHECKED_CAST")
+internal fun convertTypeMap(obj: Map<*,*>): JsonElement = jsonObjectOf(
     (obj as? MutableMap<String, *>)
         ?.mapValues { convert(it.value) }
         ?: throw IllegalArgumentException("Map must have keys of type String")
 )
 
-fun convertTypeList(obj: List<*>): JsonElement = jsonArrayOf(
-    obj.map { convert(it) }
+internal fun convertTypeList(obj: List<*>): JsonElement = jsonArrayOf(
+        obj.map { convert(it) }
 )

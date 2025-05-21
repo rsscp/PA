@@ -1,36 +1,15 @@
 package tests
 
-import json.models.JsonArray.Constructor.jsonArrayOf
-import json.models.JsonArray
-import json.models.JsonObject.Constructor.jsonObjectOf
-import json.models.JsonObject
 import json.converter.convert
-import json.models.JsonBoolean
-import json.models.JsonNull
-import json.models.JsonNumber
-import json.models.JsonString
-
+import json.models.*
+import json.models.JsonArray.Constructor.jsonArrayOf
+import json.models.JsonObject.Constructor.jsonObjectOf
+import json.rest.Server
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
+
 class Tests {
-
-    enum class EvalType {
-        TEST, PROJECT, EXAM
-    }
-
-    data class Course(
-        val name: String,
-        val credits: Int,
-        val evaluation: List<EvalItem>
-    )
-
-    data class EvalItem(
-        val name: String,
-        val percentage: Double,
-        val mandatory: Boolean,
-        val type: EvalType?
-    )
 
     @Test
     fun primitivesTest() {
@@ -160,14 +139,14 @@ class Tests {
             )
         )
 
-        val filtered = json.filter { _, value -> value is JsonArray }
+        val filtered = json.filter { key, value -> value is JsonArray }
 
         assertEquals(filteredExpected, filtered)
     }
 
     @Test
     fun jsonArrayCheckTypesTest() {
-        val jsonDifferentTypes = jsonObjectOf(
+        val testA = jsonObjectOf(
             "ids" to jsonArrayOf(
                 JsonNumber(1),
                 JsonNumber(2),
@@ -177,10 +156,23 @@ class Tests {
                 JsonNumber(10),
                 JsonString("dev"),
                 JsonString("user")
-            ),
+            )
         )
 
-        val jsonSameTypes = jsonObjectOf(
+        val testB = jsonArrayOf(
+            jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            jsonArrayOf(
+                JsonNumber(10),
+                JsonString("dev"),
+                JsonString("user")
+            )
+        )
+
+        val testC = jsonObjectOf(
             "ids" to jsonArrayOf(
                 JsonNumber(1),
                 JsonNumber(2),
@@ -190,17 +182,68 @@ class Tests {
                 JsonString("user"),
                 JsonString("dev"),
                 JsonString("user")
-            ),
+            )
         )
 
-        assertEquals(jsonDifferentTypes.checkArrayTypes(), false)
-        assertEquals(jsonSameTypes.checkArrayTypes(), true)
+        val testD = jsonArrayOf(
+            jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            jsonArrayOf(
+                JsonString("admin"),
+                JsonString("dev"),
+                JsonString("user")
+            )
+        )
+
+        val testE = jsonArrayOf(
+            jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            jsonArrayOf(
+                jsonArrayOf(
+                    JsonNumber(10),
+                ),
+                jsonArrayOf(
+                    JsonString("admin")
+                )
+            )
+        )
+
+        val testF = jsonArrayOf(
+            jsonArrayOf(
+                JsonNumber(1),
+                JsonNumber(2),
+                JsonNumber(3),
+            ),
+            jsonArrayOf(
+                jsonArrayOf(
+                    JsonNumber(10),
+                    jsonObjectOf()
+                ),
+                jsonArrayOf(
+                    JsonString("admin"),
+                    jsonObjectOf()
+                )
+            )
+        )
+
+        assertEquals(testA.checkArrayTypes(), false)
+        assertEquals(testB.checkArrayTypes(), false)
+        assertEquals(testC.checkArrayTypes(), true)
+        assertEquals(testD.checkArrayTypes(), true)
+        assertEquals(testE.checkArrayTypes(), true)
+        assertEquals(testF.checkArrayTypes(), false)
 
     }
 
     @Test
     fun serializeTest() {
-        val json = jsonObjectOf(
+        val jsonObject = jsonObjectOf(
             "name" to JsonString("Alice"),
             "age" to JsonNumber(30.0),
             "active" to JsonBoolean(true),
@@ -210,7 +253,26 @@ class Tests {
             ),
             "note" to JsonNull()
         )
-        assertEquals("{\"name\": \"Alice\", \"age\": 30.0, \"active\": true, \"tags\": [\"dev\", \"user\"], \"note\": null}", json.serialize())
+        val jsonArray = jsonArrayOf(
+            JsonNumber(1),
+            JsonNumber(2),
+            JsonNumber(3)
+        )
+
+        val stringObject = """{
+            |"name":"Alice",
+            |"age":30.0,
+            |"active":true,
+            |"tags":["dev","user"],
+            |"note":null
+        |}""".trimMargin().replace("\n", "")
+
+        val stringArray = """[
+            |1,2,3
+        |]""".trimMargin().replace("\n", "")
+
+        assertEquals(stringObject, jsonObject.serialize())
+        assertEquals(stringArray, jsonArray.serialize())
     }
 
     @Test
@@ -270,5 +332,92 @@ class Tests {
         val converted = convert(course)
 
         assertEquals(json, converted)
+    }
+
+    @Test
+    fun jsonControllerTest() {
+        val server = Server(Controller())
+        server.start()
+
+        val responses = mutableListOf<String>()
+        val expectedResponses = mutableListOf<String>()
+
+        responses.add(getJsonString("http://localhost:8080/api/ints"))
+        expectedResponses.add(jsonArrayOf(
+            JsonNumber(1),
+            JsonNumber(2),
+            JsonNumber(3)
+        ).serialize())
+
+        responses.add(getJsonString("http://localhost:8080/api/pair"))
+        expectedResponses.add(jsonObjectOf(
+            "first" to JsonString("um"),
+            "second" to JsonString("dois")
+        ).serialize())
+
+        responses.add(getJsonString("http://localhost:8080/api/path/test-string"))
+        expectedResponses.add(JsonString("test-string"+"!").serialize())
+
+        responses.add(getJsonString("http://localhost:8080/api/args?n=4&text=teste"))
+        expectedResponses.add(jsonObjectOf(
+            "teste" to JsonString("teste"+"teste"+"teste"+"teste")
+        ).serialize())
+
+        responses.add(getJsonString("http://localhost:8080/api/complex/test-string/3.35/false"))
+        expectedResponses.add(JsonString("test-string"+"3.35"+"false"+"!").serialize())
+
+        server.stop()
+
+        expectedResponses.forEachIndexed { i, expected ->
+            assertEquals(expected, responses[i])
+        }
+    }
+
+    @Test
+    fun jsonCourseControllerTest() {
+        val courses = listOf(
+            Course(
+            "PA", 6, listOf(
+                EvalItem("quizzes", .2, false, null),
+                EvalItem("project", .8, true, EvalType.PROJECT)
+            )),
+            Course(
+            "IAR", 6, listOf(
+                EvalItem("exam", .1, false, EvalType.EXAM),
+                EvalItem("project", .9, true, EvalType.PROJECT)
+            )),
+        )
+
+        val server = Server(CourseController(courses))
+        server.start()
+
+        val responses = mutableListOf<String>()
+        val expectedResponses = mutableListOf<String>()
+
+        responses.add(getJsonString("http://localhost:8080/courses/courseId/0"))
+        expectedResponses.add("""{
+            |"credits":6,
+            |"evaluation":[
+                |{"mandatory":false,"name":"quizzes","percentage":0.2,"type":null},
+                |{"mandatory":true,"name":"project","percentage":0.8,"type":"PROJECT"}
+            |],
+            |"name":"PA"
+        |}""".trimMargin().replace("\n", ""))
+
+        responses.add(getJsonString("http://localhost:8080/courses/courseId/1"))
+        expectedResponses.add("""{
+            |"credits":6,
+            |"evaluation":[
+                |{"mandatory":false,"name":"exam","percentage":0.1,"type":"EXAM"},
+                |{"mandatory":true,"name":"project","percentage":0.9,"type":"PROJECT"}
+            |],
+            |"name":"IAR"
+        |}""".trimMargin().replace("\n", ""))
+
+        server.stop()
+
+        expectedResponses.forEachIndexed { i, expected ->
+            assertEquals(expected, responses[i])
+        }
     }
 }
