@@ -5,7 +5,10 @@ import kotlin.reflect.full.*
 import com.sun.net.httpserver.HttpServer
 
 
-class Server(vararg controllersArray: Any) {
+class Server(
+    vararg controllersArray: Any,
+    port: Int = 8080
+) {
 
     private val controllers: MutableList<Any>
     private val socket: InetSocketAddress
@@ -17,7 +20,7 @@ class Server(vararg controllersArray: Any) {
                 throw IllegalArgumentException("Controller must have Mapping annotation")
         }
         controllers = mutableListOf(*controllersArray)
-        socket = InetSocketAddress(8080)
+        socket = InetSocketAddress(port)
         server = HttpServer.create(socket, 1)
         createContext(server)
     }

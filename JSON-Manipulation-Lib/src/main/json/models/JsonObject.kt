@@ -146,7 +146,7 @@ class JsonObject private constructor(
     }
 
     /**
-     * Serializes the Map into a Json compatible string
+     * Serializes this instance into a valid json string
      *
      * @return the serialized Map
      */

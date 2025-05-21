@@ -33,5 +33,7 @@ bin/
 .DS_Store
 
 ### Gradle ###
-/build/
 .gradle
+/build/*
+!build/libs
+!build/dokka

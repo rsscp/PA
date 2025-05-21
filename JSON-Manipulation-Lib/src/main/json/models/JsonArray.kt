@@ -1,10 +1,9 @@
 package json.models
 
-import json.models.JsonElement
 import kotlin.reflect.KClass
 
 /**
- * A json array containing elements of type JsonElement
+ * Json array representation containing elements of type JsonElement
  */
 class JsonArray private constructor(
     private val elements: MutableList<JsonElement> = mutableListOf()
@@ -40,11 +39,11 @@ class JsonArray private constructor(
     }
 
     /**
-     * Verifies if the JsonArray only has JsonElements of the same type
+     * Verifies if this instance only contains JsonElements of the same type
      *
-     * @return true if all have the same type false if not
+     * @return True if all have the same type and false otherwise
      */
-    internal fun isSameType(): Boolean {
+    fun isSameType(): Boolean {
         if (elements.isNotEmpty()) {
             val type: KClass<out Any> = elements[0]::class
             return type != JsonNull::class && elements.all { it::class == type }
@@ -53,48 +52,56 @@ class JsonArray private constructor(
     }
 
     /**
-     * Applies the [map] to all elements of the List
+     * Applies the [mapping] function to all elements of this instance
      *
-     * @return the new JsonArray
+     * @return New JsonArray instance with mapped elements
      */
-    fun map(map: (JsonElement) -> JsonElement):JsonArray {
-        val newArray = elements.map(map).toMutableList()
+    fun map(mapping: (JsonElement) -> JsonElement): JsonArray {
+        val newArray = elements.map(mapping).toMutableList()
         return JsonArray(newArray)
     }
 
     /**
-     * @return the size of element
+     *
+     *
+     * @return Number of elements contained by this instance
      */
     fun size(): Int = elements.size
 
+    /**
+     * Copies this instance
+     *
+     * @return copy
+     */
     fun copy(): JsonArray {
         return JsonArray(elements.toMutableList())
     }
 
     /**
-     * Hash code method for a JsonArray instance
+     * Hash code method for this instance
      *
-     * @return Int value of hash code
+     * @return Int value unique for this instance
      */
     override fun hashCode(): Int {
         return elements.hashCode()
     }
 
     /**
-     * Element wise comparison between two instances of JsonArray
+     * Compare JsonArray instance to [other]
+     * Does elements wise comparison if [other] is also instance of JsonArray
      *
      * @param other Instance of JsonArray to compare
-     * @return Boolean value indicating if compared instances have the same content
+     * @return Boolean value indicating if [other] is instance of JsonArray and if the compared instances have the same content
      */
     override fun equals(other: Any?): Boolean {
         return other is JsonArray && elements == other.elements
     }
 
     /**
-     * Gets array element using [index]
+     * Getter for array element using [index]
      *
-     * @param index Index for the element to get from [elements]
-     * @return the filtered JsonArray
+     * @param index Index for the element
+     * @return Element at [index]
      */
     operator fun get(index: Int): JsonElement? {
         return elements[index]
@@ -103,26 +110,25 @@ class JsonArray private constructor(
     /**
      * Sets array element at [index] to [value]
      *
-     * @param index of the element to modify
+     * @param index Index for the element to modify
      * @param value New value for the element to modify
-     * @return the filtered JsonArray
      */
     operator fun set(index: Int, value: JsonElement) {
         elements[index] = value
     }
 
     /**
-     * Removes element within the json array
+     * Removes element within this instance using it's index
      *
-     * @param index of the element to remove
-     * @return the removed element or null if not found.
+     * @param index for the element to remove
+     * @return Removed element or null if not found.
      */
     fun removeAt(index: Int): JsonElement {
         return elements.removeAt(index)
     }
 
     /**
-     * Removes element within the json array
+     * Removes element within this instance using it's value
      *
      * @param value equaling the element to remove
      * @return boolean value indicating if the element was found and removed
@@ -132,7 +138,7 @@ class JsonArray private constructor(
     }
 
     /**
-     * Applies a filter to the List
+     * Applies a filter to the elements of this instance
      *
      * @return the filtered JsonArray
      */
@@ -142,16 +148,15 @@ class JsonArray private constructor(
     }
 
     /**
-     * Iterates the list recursively applying [visitor]
-     *
+     * Iterates the list recursively applying [visitor] to this instance and each of it's elements
      */
-    override fun accept(visitor: (JsonElement) -> Unit): Unit {
+    override fun accept(visitor: (JsonElement) -> Unit) {
         super.accept(visitor)
         elements.forEach { it.accept(visitor) }
     }
 
     /**
-     * Serializes the List into a Json compatible string
+     * Serializes this instance into a valid json string
      *
      * @return the serialized list
      */

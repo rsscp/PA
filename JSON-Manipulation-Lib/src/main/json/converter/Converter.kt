@@ -11,6 +11,13 @@ import json.models.JsonNumber
 import json.models.JsonString
 import kotlin.collections.map
 
+
+/**
+ * Convert data class instance into a JsonElement instance
+ *
+ * @param obj Reference object for JsonElement creation
+ * @return New JsonElement instance corresponding to
+ */
 fun convert(obj: Any?): JsonElement {
 
     if (obj == null)
