@@ -1,0 +1,32 @@
+plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.9.20"
+    id("org.jetbrains.dokka") version "1.9.0"
+}
+
+group 'json'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java.srcDirs("src/main")
+    }
+    test {
+        java.srcDirs("src/test")
+    }
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
