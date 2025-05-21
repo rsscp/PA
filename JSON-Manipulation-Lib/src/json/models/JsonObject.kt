@@ -3,7 +3,9 @@ package json.models
 import json.models.JsonElement
 
 /**
- * A json object containing a list of properties composed by a key of type String and a value of type JsonElement
+ * A Json object containing a list of properties composed by a key of type String and a value of type JsonElement
+ *
+ * @property properties the Map of keys and values of the JsonElements <String, JsonElement>
  */
 class JsonObject private constructor(
     private val properties: MutableMap<String, JsonElement> = mutableMapOf()
@@ -91,10 +93,10 @@ class JsonObject private constructor(
     }
 
     /**
-     * Sets object property identified by [key] to [value]
+     * Sets object property value identified by [key] to [value]
      *
      * @param key Key identifying the property to modify
-     * @param value New value for the property to modify
+     * @param value New value for the property
      * @return the filtered JsonArray
      */
     operator fun set(key: String, value: JsonElement) {
@@ -105,7 +107,7 @@ class JsonObject private constructor(
      * Removes element within the json object
      *
      * @param key of the property to remove
-     * @param value equaling the element to remove
+     * @param value of the element to remove
      * @return boolean value indicating if the element was found and removed
      */
     fun remove(key: String, value: JsonElement): Boolean {
@@ -116,7 +118,7 @@ class JsonObject private constructor(
      * Removes element within the json object
      *
      * @param key of the property to remove
-     * @return removed element or null if [key] was not not found.
+     * @return removed element or null if [key] was not found.
      */
     fun removeAt(key: String): JsonElement? {
         return properties.remove(key)
