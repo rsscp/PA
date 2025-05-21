@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  */
 class JsonArray private constructor(
     private val elements: MutableList<JsonElement> = mutableListOf()
-): JsonElement() {
+): JsonContainer() {
 
     /**
      * Companion object containing factory methods for the JsonArray class
@@ -44,10 +44,10 @@ class JsonArray private constructor(
      *
      * @return true if all have the same type false if not
      */
-    fun isSameType(): Boolean {
+    internal fun isSameType(): Boolean {
         if (elements.isNotEmpty()) {
             val type: KClass<out Any> = elements[0]::class
-            return elements.all { it::class == type }
+            return type != JsonNull::class && elements.all { it::class == type }
         }
         return true
     }
@@ -136,7 +136,7 @@ class JsonArray private constructor(
      *
      * @return the filtered JsonArray
      */
-    fun filter(check: (JsonElement) -> Boolean): JsonArray {       //TODO override de interface ou super class?
+    fun filter(check: (JsonElement) -> Boolean): JsonArray {
         val filtered = elements.filter { check(it) }
         return JsonArray(filtered.toMutableList())
     }
@@ -155,5 +155,6 @@ class JsonArray private constructor(
      *
      * @return the serialized list
      */
-    override fun serialize(): String = "[" + elements.joinToString { it.serialize() } + "]"
+    override fun serialize(): String =
+        "[" + elements.joinToString(",") { it.serialize() } + "]"
 }

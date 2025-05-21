@@ -6,7 +6,7 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.hasAnnotation
 
-class MappingHandler(
+internal class MappingHandler(
     controller: Any,
     private val function: KFunction<*>,
     private val method: HttpMethod,
@@ -23,6 +23,27 @@ class MappingHandler(
         parametersReady = mutableMapOf(
             function.parameters[0] to controller
         )
+    }
+
+    fun executeReady(httpMethod: String, path: String, query: String): Boolean {
+        var ready = true
+        val receivedMethod = HttpMethod.valueOf(httpMethod.uppercase())
+
+        if (receivedMethod != method)
+            return false
+
+        ready = ready && putPathParametersReady(path)
+        ready = ready && putQueryParametersReady(query)
+
+        return ready
+    }
+
+    fun executeClear() {
+        parametersReady.clear()
+    }
+
+    fun execute(): String {
+        return convert(function.callBy(parametersReady)).serialize()
     }
     
     private fun fillPathParameterized() {
@@ -54,25 +75,12 @@ class MappingHandler(
             }
     }
 
-    fun executeReady(httpMethod: String, path: String, query: String): Boolean {
-        var ready = true
-        val receivedMethod = HttpMethod.valueOf(httpMethod.uppercase())
-
-        if (receivedMethod != method)
-            return false
-
-        ready = ready && putPathParametersReady(path)
-        ready = ready && putQueryParametersReady(query)
-
-        return ready
-    }
-
     private fun putPathParametersReady(path: String): Boolean {
         val split = path
             .substring(1)
             .split("/")
 
-        return pathParameterized
+        return split.size == pathParameterized.size && pathParameterized
             .mapIndexed { i, pair -> i to pair }
             .all {
                 val index = it.first
@@ -113,13 +121,5 @@ class MappingHandler(
         } catch (ex: Exception) {
             return false
         }
-    }
-
-    fun executeClear() {
-        parametersReady.clear()
-    }
-
-    fun execute(): String {
-        return convert(function.callBy(parametersReady)).serialize()
     }
 }

@@ -7,7 +7,7 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
-class ControllerHandler(controller: Any): HttpHandler {
+internal class ControllerHandler(controller: Any): HttpHandler {
 
     private val rootPath: String
     private val mappings: List<MappingHandler>
@@ -34,7 +34,7 @@ class ControllerHandler(controller: Any): HttpHandler {
 
     private fun checkMappingValidity(functions: List<KFunction<*>>) {
         functions.forEach {
-            val regex = Regex("^(\\/|(\\/(\\w+|\\{[a-zA-Z]+\\w*}))+)\$")
+            val regex = Regex("^(/|(/(\\w+|\\{[a-zA-Z]+\\w*}))+)$")
             val path = "/" + it.findAnnotation<Mapping>()?.path.toString()
             if (!regex.matches(path))
                 throw IllegalArgumentException("Mapping path \"$path\" is not valid")

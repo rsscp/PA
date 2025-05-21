@@ -37,3 +37,15 @@ class Controller {
         @PathParam four: Boolean,
     ): String = one + three + four + "!"
 }
+
+@Mapping("courses")
+class CourseController(val courses: List<Course>) {
+
+    @Method(HttpMethod.GET)
+    @Mapping("courseId/{courseIndex}")
+    fun course(
+        @PathParam courseIndex: Int,
+    ): Course {
+        return courses[courseIndex]
+    }
+}

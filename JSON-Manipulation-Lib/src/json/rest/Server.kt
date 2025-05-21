@@ -7,9 +7,9 @@ import com.sun.net.httpserver.HttpServer
 
 class Server(vararg controllersArray: Any) {
 
-    val controllers: MutableList<Any>
-    val socket: InetSocketAddress
-    val server: HttpServer
+    private val controllers: MutableList<Any>
+    private val socket: InetSocketAddress
+    private val server: HttpServer
 
     init {
         controllersArray.forEach {
@@ -26,7 +26,12 @@ class Server(vararg controllersArray: Any) {
         server.start()
     }
 
-    fun createContext(server: HttpServer) {
+    fun stop() {
+        server.stop(0)
+    }
+
+    private fun createContext(server: HttpServer) {
+        checkRepeated()
         controllers.forEach {
             val annotation = it::class.findAnnotation<Mapping>()
             val path = "/" + annotation?.path
@@ -34,7 +39,9 @@ class Server(vararg controllersArray: Any) {
         }
     }
 
-    fun stop() {
-        server.stop(0)
+    private fun checkRepeated() {
+        val checked = controllers.map { it::class.findAnnotation<Mapping>()?.path ?: "" }.toSet()
+        if (checked.size != controllers.size)
+            throw IllegalArgumentException("Root mappings cannot have repeated paths")
     }
 }
